@@ -1,0 +1,14 @@
+steps:	
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build','-f','./Dockerfile', '-t', 'gcr.io/nft-platform-345404/github.com/vnggames/nft-frontend:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/nft-platform-345404/github.com/vnggames/nft-frontend:$COMMIT_SHA']
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=kur.yaml
+  - --image=gcr.io/nft-platform-345404/github.com/vnggames/nft-frontend:$COMMIT_SHA
+  - --location=asia-southeast1-a
+  - --cluster=nft-dev-env
+options:
+  logging: CLOUD_LOGGING_ONLY
